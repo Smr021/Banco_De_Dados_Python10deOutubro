@@ -22,7 +22,7 @@ class Usuario(Base):
     nome = Column('nome',String)
     email = Column('email', String)
     senha = Column('senha', String)
-    
+
 
     # Definindo atributos da classe.
     def __init__(self,nome:str,email:str,senha:str):
@@ -30,7 +30,9 @@ class Usuario(Base):
         self.email = email
         self.senha = senha
 
+# Criando tabela no banco de dados.
 Base.metadata.create_all(bind=db)
+
         
 
 
@@ -70,3 +72,5 @@ Base.metadata.create_all(bind=db)
 # INSERT, UPDATE, SELECT *
 
 # pip install sqlalchemy - ferramenta que permite usar o ORM
+
+# bind uma conexão com alguma coisa, no caso com banco de dados

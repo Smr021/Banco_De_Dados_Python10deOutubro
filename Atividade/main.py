@@ -101,3 +101,16 @@ else:
 
 # Fechando conexão.
 session.close() 
+
+
+
+
+
+ 
+
+
+
+
+
+
+

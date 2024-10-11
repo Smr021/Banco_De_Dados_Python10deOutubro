@@ -2,28 +2,28 @@ import os
 from sqlalchemy import create_engine, Column, String, Integer
 from sqlalchemy.orm import sessionmaker, declarative_base
 
+# Criando banco de dados.
+db = create_engine("sqlite:///meubanco.db")
 
-db = create_engine('sqlite:///meubancoBD.db')
-
-# Conecxão com banco de dados.
-Session = sessionmaker (bind=db)
+# Conexão com o banco de dados.
+Session = sessionmaker(bind=db)
 session = Session()
 
 # Criando tabela.
 Base = declarative_base()
 
 class Usuario(Base):
-    __tablename__ = 'usuarios'
+    # Definindo nome da tabela.
+    __tablename__ = "usuarios"
 
     # Definindo atributos da tabela.
-    id = Column('id', Integer,primary_key=True, autoincrement=True)
-    nome = Column('nome',String)
-    email = Column('email', String)
-    senha = Column('senha', String)
-
+    id = Column("id", Integer, primary_key=True, autoincrement=True)
+    nome = Column("nome", String)
+    email = Column("email", String)
+    senha = Column("senha", String)
 
     # Definindo atributos da classe.
-    def __init__(self,nome:str,email:str,senha:str):
+    def __init__(self, nome: str, email: str, senha: str):
         self.nome = nome
         self.email = email
         self.senha = senha
@@ -31,38 +31,73 @@ class Usuario(Base):
 # Criando tabela no banco de dados.
 Base.metadata.create_all(bind=db)
 
-os.system('cls || clear')
+os.system("cls || clear")
 
-# Salvar no bando de dados.
-# usuario = Usuario('Marta','marta@gmail.com','123')    
+# Salvar no banco de dados.
+# usuario = Usuario("Marta", "marta@gmail.com", "123")
+# usuario = Usuario(senha="123", nome="José", email="jose@gmail.com")
+
 for i in range(2):
-    nome = input('Digite seu nome: ')
-    email = input('Digite seu email: ')
-    senha = input('Digite seu senha: ')
+    nome = input("Digite seu nome: ")
+    email = input("Digite seu e-mail: ")
+    senha=  input("Digite sua senha: ")
 
-    usuario = Usuario(nome=nome,email=email,senha=senha)
+    usuario =  Usuario(senha=senha, nome=nome, email=email)
     session.add(usuario)
     session.commit()
+    print()
 
 # Mostrando conteúdo do banco de dados.
-print('\nListando  usuário no banco de dados.')
+print("\nListando usuários no banco de dados.")
 lista_usuarios = session.query(Usuario).all()
 
 for usuario in lista_usuarios:
-    print(f'{usuario.id} - {usuario.nome} - {usuario.email}')
+    print(f"{usuario.id} - {usuario.nome} - {usuario.email}")
 
 # Deletando um usuário.
-usuario = session.query(Usuario).filter_by(email='joao@gmail.com').first()
-session.delete(usuario)
-session.commit()
-print('\nDeletando usuário no banco de dados.')
+print("\nExcluindo usuário no banco de dados.")
+email_usuario = input("Informe o e-mail do usuário: ")
+usuario = session.query(Usuario).filter_by(email = email_usuario).first()
 
+if usuario:
+    session.delete(usuario)
+    session.commit()
+    print("\nUsuário deletado com sucesso.")
+else:
+    print("Usuário não encontrado.")
 
-print('\nListando  usuário no banco de dados.')
+# Mostrando conteúdo do banco de dados.
+print("\nListando usuários no banco de dados.")
 lista_usuarios = session.query(Usuario).all()
+
 for usuario in lista_usuarios:
-    print(f'{usuario.id} - {usuario.nome} - {usuario.email}')
+    print(f"{usuario.id} - {usuario.nome} - {usuario.email}")
 
+# Atualizar um usuário.
+print("\nAtualizando os dados de um usuário.")
 
+email_usuario = input("Informe o e-mail do usuário: ")
 
+usuario = session.query(Usuario).filter_by(email = email_usuario).first()
+if usuario:
+    usuario.nome = input("Digite seu nome: ")
+    usuario.email = input("Digite seu e-mail: ")
+    usuario.senha = input("Digite sua senha: ")  
+    session.commit()
+else:
+    print("Usuário não encontrado.")
 
+# Pesquisando um usuário.
+print("\nPesquisando um usuário pelo e-mail.")
+
+email_usuario = input("Informe o e-mail do usuário: ")
+
+usuario = session.query(Usuario).filter_by(email = email_usuario).first()
+
+if usuario:
+    print(f"{usuario.id} - {usuario.nome} - {usuario.email}")
+else:
+    print("Usuário não encontrado.")
+
+# Fechando conexão.
+session.close() 
